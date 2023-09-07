@@ -1,6 +1,14 @@
 data "kubernetes_namespace" "operator" {
   metadata {
     name = var.operator_namespace
+    # name = kubernetes_namespace.vso.metadata.namespace
+  }
+}
+
+data "kubernetes_service" "vault" {
+  metadata {
+    name = "vault-ui"
+    namespace = "vault"
   }
 }
 
