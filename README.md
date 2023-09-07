@@ -8,7 +8,6 @@
 - 시간 : 09:00 ~ 12:00
 - 장소: 역삼 센터필드 AWS Training Center 
 
-
 ## **[ 목차 ]**
 - OT 및 소개
 - DevSecOps 이해와 HashiCorp Vault 소개
@@ -22,3 +21,31 @@
 ## **[운영진]**
 - 강사 : HashiCorp - 유형욱, 나지훈
 - 조력자 : MZC - 이웅희, 나의목, 이송, 김예지
+
+---
+
+# 사용 가이드
+
+## Create EKS Cluster
+
+terraform directory에서 실행
+
+```
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+## Validation EKS Cluster
+
+Bastion Host에 접속 후 확인합니다.
+
+### EKS Cluster kubeconfig 설정
+```
+aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME --kubeconfig ~/.kube/config
+```
+
+### EKS Cluster 정보 확인
+```
+kubectl cluster-info
+```
