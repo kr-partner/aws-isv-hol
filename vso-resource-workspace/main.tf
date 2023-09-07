@@ -17,7 +17,8 @@ terraform {
 
 provider "vault" {
   # Configuration options
-  address = var.vault_address
+  # address = var.vault_address
+  address = "http://${data.kubernetes_service.vault.status[0].load_balancer[0].ingress[0].hostname}:8200"
   token   = var.vault_token
 }
 

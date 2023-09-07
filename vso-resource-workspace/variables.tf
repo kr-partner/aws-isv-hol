@@ -34,7 +34,7 @@ variable "db_role" {
 variable "vault_address" {
   # default = "http://vault.vault.svc.cluster.local:8200"
   # default = "${data.kubernetes_service.vault.external_ips}:8200"
-  default = "http://${data.kubernetes_service.vault.status[0].load_balancer[0].ingress[0].hostname}:8200"
+  # default = "http://${data.kubernetes_service.vault.status[0].load_balancer[0].ingress[0].hostname}:8200"
 }
 variable "vault_token" {
   default = "root"

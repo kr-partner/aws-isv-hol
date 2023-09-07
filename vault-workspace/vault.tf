@@ -39,3 +39,10 @@ resource "kubernetes_namespace" "vault" {
     name = "vault"
   }
 }
+
+data "kubernetes_service" "vault" {
+  metadata {
+    name = "vault-ui"
+    namespace = "vault"
+  }
+}

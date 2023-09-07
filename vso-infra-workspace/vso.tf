@@ -10,7 +10,7 @@ resource "helm_release" "vso" {
 
   set {
     name  = "defaultVaultConnection.enabled"
-    value = "true"
+    value = "false"
   }
   set {
     name  = "defaultVaultConnection.address"

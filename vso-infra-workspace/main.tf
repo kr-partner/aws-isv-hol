@@ -22,8 +22,3 @@ provider "kubernetes" {
   #config_context = var.k8s_config_context
   config_path    = var.k8s_config_path
 }
-
-resource "vault_namespace" "test" {
-  count = var.vault_enterprise ? 1 : 0
-  path  = "${local.name_prefix}-ns"
-}

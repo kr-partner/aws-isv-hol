@@ -3,7 +3,4 @@ locals {
   # common locals
   name_prefix = "demo"
   namespace   = var.vault_enterprise ? vault_namespace.test[0].path_fq : null
-
-  # k8s locals
-  k8s_namespace = "${local.name_prefix}-ns"
 }
