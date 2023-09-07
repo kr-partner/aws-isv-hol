@@ -89,6 +89,12 @@ resource "aws_instance" "ec2_bastion_host" {
             # K9s Install
             sudo su -c "curl -sS https://webinstall.dev/k9s | bash"
 
+            # Terraform CLI Install
+            sudo yum install -y yum-utils
+            sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+            sudo yum -y install terraform
+            terraform -install-autocomplete
+
             # Create SSH Keypair
             ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
 
