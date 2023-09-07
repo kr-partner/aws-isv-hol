@@ -46,9 +46,6 @@ resource "aws_instance" "ec2_bastion_host" {
             export AWS_DEFAULT_REGION=${var.aws_region}
             echo "export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> /etc/profile
 
-            # K9s Install
-            curl -sS https://webinstall.dev/k9s | bash
-
             # Install YAML Highlighter
             wget https://github.com/andreazorzetto/yh/releases/download/v0.4.0/yh-linux-amd64.zip
             unzip yh-linux-amd64.zip
@@ -88,6 +85,9 @@ resource "aws_instance" "ec2_bastion_host" {
             # CLUSTER_NAME
             export CLUSTER_NAME=${var.eks_cluster_name}
             echo "export CLUSTER_NAME=$CLUSTER_NAME" >> /etc/profile
+
+            # K9s Install
+            sudo su -c "curl -sS https://webinstall.dev/k9s | bash"
 
             # Create SSH Keypair
             ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
