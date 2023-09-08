@@ -9,7 +9,7 @@ resource "helm_release" "vault" {
   chart      = "vault"
 
   set {
-    name  = "server.dev.enabled"
+    name  = "server.enabled"
     value = "true"
   }
   set {
@@ -45,4 +45,5 @@ data "kubernetes_service" "vault" {
     name = "vault-ui"
     namespace = "vault"
   }
+  depends_on = [helm_release.vault]
 }

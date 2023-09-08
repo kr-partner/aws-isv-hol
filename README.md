@@ -24,11 +24,14 @@
 
 ---
 
-# 사용 가이드
+# 실습 가이드
 
-## Create EKS Cluster
+## 1. 이벤트 엔진
 
-terraform directory에서 실행
+
+## 2. Terraform을 활용한 EKS Cluster 생성
+
+### 1) [eks-workspace](./eks-workspace/)에서 실행
 
 ```
 terraform init
@@ -36,16 +39,16 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-## Validation EKS Cluster
+### 2) EKS Cluster 확인 
 
 Bastion Host에 접속 후 확인합니다.
 
-### EKS Cluster kubeconfig 설정
-```
+### 3) EKS Cluster kubeconfig 설정
+```bash
 aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $CLUSTER_NAME --kubeconfig ~/.kube/config
 ```
 
 ### EKS Cluster 정보 확인
-```
+```bash
 kubectl cluster-info
 ```
