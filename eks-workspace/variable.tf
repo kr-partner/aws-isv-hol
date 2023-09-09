@@ -11,7 +11,7 @@ variable "eks_cluster_version" {
 }
 
 variable "ec2_key_pair" {
-  # default = "study-aws"
+  # 이벤트 엔진에서 기본 제공되는 Key Pair 사용
   # default = "ee-default-keypair"
   default = "hw-key"
 }

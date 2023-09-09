@@ -15,5 +15,10 @@ variable "vault_enterprise" {
   default = false
 }
 
-# variable "vault_address" {}
-# variable "vault_token" {}
+# variable "vault_address" {
+#   default = "127.0.0.1:8200"
+# }
+
+# variable "vault_token" {
+#   default = "root"
+# }

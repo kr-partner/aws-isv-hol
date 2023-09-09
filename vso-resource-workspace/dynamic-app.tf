@@ -59,7 +59,8 @@ resource "kubernetes_manifest" "vault-auth-default" {
   }
 }
 
-resource "kubernetes_manifest" "vault-dynamic-secret" {
+# ====== Dynamic Secrets 시나리오 ======
+resource "kubernetes_manifest" "vault-dynimic-secret" {
   manifest = {
     apiVersion = "secrets.hashicorp.com/v1beta1"
     kind       = "VaultDynamicSecret"
@@ -76,32 +77,6 @@ resource "kubernetes_manifest" "vault-dynamic-secret" {
         name : kubernetes_secret.db.metadata[0].name
       }
 
-      rolloutRestartTargets = [
-        {
-          kind = "Deployment"
-          name = "vso-db-demo"
-        }
-      ]
-    }
-  }
-}
-
-resource "kubernetes_manifest" "vault-dynamic-secret-create" {
-  manifest = {
-    apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind       = "VaultDynamicSecret"
-    metadata = {
-      name      = "vso-db-demo-create"
-      namespace = kubernetes_namespace.dev.metadata[0].name
-    }
-    spec = {
-      namespace = vault_auth_backend.default.namespace
-      mount     = vault_database_secrets_mount.db.path
-      path      = local.db_creds_path
-      destination = {
-        create : true
-        name : "vso-db-demo-created"
-      }
       rolloutRestartTargets = [
         {
           kind = "Deployment"

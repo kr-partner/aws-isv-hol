@@ -6,7 +6,6 @@ output "EKS_NodeGroup_Name" {
   value = element(split(":", module.eks.eks_managed_node_groups.eks_cluster-nodegroup.node_group_id), 1)
 }
 
-
 output "cluster_endpoint" {
   value = module.eks.cluster_endpoint
 }

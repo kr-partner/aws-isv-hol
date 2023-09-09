@@ -1,6 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: BUSL-1.1
-
 resource "helm_release" "postgres" {
   namespace        = kubernetes_namespace.postgres.metadata[0].name
   name             = "postgres"

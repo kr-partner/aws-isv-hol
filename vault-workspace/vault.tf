@@ -45,5 +45,6 @@ data "kubernetes_service" "vault" {
     name = "vault-ui"
     namespace = "vault"
   }
+  # K8s Service Resource가 생성된 이후에 External IP를 얻을 수 있기 때문에 명시적 의존성 부여
   depends_on = [helm_release.vault]
 }

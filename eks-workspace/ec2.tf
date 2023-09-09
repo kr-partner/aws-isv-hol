@@ -13,7 +13,7 @@ resource "aws_instance" "ec2_bastion_host" {
 
   user_data = <<-EOF
             #!/bin/bash
-            hostnamectl --static set-hostname "AEWS-bastion-host"
+            hostnamectl --static set-hostname "hashicorp-bastion-host"
 
             # Config convenience
             echo 'alias vi=vim' >> /etc/profile

@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vso-static-demo
+  namespace: demo-ns
+  labels:
+    test: vso-static-demo
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      test: vso-static-demo
+  template:
+    metadata:
+      labels:
+        test: vso-static-demo
+    spec:
+      volumes:
+        - name: static-secrets
+          secret:
+            secretName: "secret-kvv2"
+        - name: html
+          emptyDir: {}
+      containers:
+        - name: vso-static
+          image: alpine:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - while true;
+              do 
+                echo "===File Copy Pre Check===";
+                cat /tmp/empty/index.html;
+                cat /tmp/static-secrets/username >> /tmp/empty/index.html;
+                echo "<br>" >> /tmp/empty/index.html;
+                cat /tmp/static-secrets/password >> /tmp/empty/index.html;
+                echo "<br>" >> /tmp/empty/index.html;
+                echo "===File Copy Post Check===";
+                cat /tmp/empty/index.html;
+                sleep 30;
+              done;
+          volumeMounts:
+            - name: html
+              mountPath: /tmp/empty
+            - name: static-secrets
+              mountPath: /tmp/static-secrets
+        - name: example
+          image: nginx:latest
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+              readOnly: true
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "50Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                - name: X-Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: vso-static-demo-svc
+  namespace: demo-ns
+spec:
+  selector:
+    test: vso-static-demo
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
+  type: NodePort
