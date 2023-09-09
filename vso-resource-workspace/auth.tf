@@ -1,6 +1,7 @@
 # kubernetes auth config
 resource "vault_auth_backend" "default" {
   namespace = local.namespace
+  # demo-auth-mount/
   path      = local.auth_mount
   type      = "kubernetes"
 }

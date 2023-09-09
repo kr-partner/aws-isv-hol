@@ -6,12 +6,12 @@ resource "vault_mount" "kvv2" {
 }
 
 resource "vault_kv_secret_v2" "example" {
-  mount                      = vault_mount.kvv2.path
-  name                       = "kv-v2"
+  mount                      = "${vault_mount.kvv2.path}"
+  name                       = "webapp/config"
   data_json                  = jsonencode(
   {
-    zip       = "zap",
-    foo       = "bar"
+    username       = "static-user-kvv2",
+    password       = "static-password-kvv2"
   }
   )
 }
