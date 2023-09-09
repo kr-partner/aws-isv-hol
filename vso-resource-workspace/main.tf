@@ -34,7 +34,7 @@ provider "kubernetes" {
   config_path    = var.k8s_config_path
 }
 
-resource "kubernetes_namespace" "dev" {
+resource "kubernetes_namespace" "demo-ns" {
   metadata {
     name = local.k8s_namespace
   }

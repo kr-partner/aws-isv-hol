@@ -4,10 +4,9 @@ resource "terraform_data" "permission" {
     working_dir = "${path.module}"
     command     = "chmod +x setup.sh"
   }
-
-  triggers_replace = [
-    terraform_data.create_securitygroup_rules.id
-  ]
+#   triggers_replace = [
+#     terraform_data.create_securitygroup_rules.id
+#   ]
 }
 
 resource "terraform_data" "setup" {
