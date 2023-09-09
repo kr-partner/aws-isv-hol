@@ -44,3 +44,24 @@ resource "vault_namespace" "test" {
   count = var.vault_enterprise ? 1 : 0
   path  = "${local.name_prefix}-ns"
 }
+
+data "kubernetes_namespace" "operator" {
+  metadata {
+    name = var.operator_namespace
+    # name = kubernetes_namespace.vso.metadata.namespace
+  }
+}
+
+data "kubernetes_namespace" "demo-ns" {
+  metadata {
+    name = var.demo_app_namespace
+    # name = kubernetes_namespace.vso.metadata.namespace
+  }
+}
+
+data "kubernetes_service" "vault" {
+  metadata {
+    name = "vault-ui"
+    namespace = "vault"
+  }
+}

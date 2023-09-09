@@ -1,63 +1,49 @@
-data "kubernetes_namespace" "operator" {
-  metadata {
-    name = var.operator_namespace
-    # name = kubernetes_namespace.vso.metadata.namespace
-  }
-}
+# resource "kubernetes_manifest" "vault-connection-default" {
+#   manifest = {
+#     apiVersion = "secrets.hashicorp.com/v1beta1"
+#     kind       = "VaultConnection"
+#     metadata = {
+#       name      = "default"
+#       namespace = data.kubernetes_namespace.operator.metadata[0].name
+#     }
+#     spec = {
+#       address = "http://vault.vault.svc.cluster.local:8200"
+#     }
+#   }
 
-data "kubernetes_service" "vault" {
-  metadata {
-    name = "vault-ui"
-    namespace = "vault"
-  }
-}
+#   field_manager {
+#     # force field manager conflicts to be overridden
+#     force_conflicts = true
+#   }
+# }
 
-resource "kubernetes_manifest" "vault-connection-default" {
-  manifest = {
-    apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind       = "VaultConnection"
-    metadata = {
-      name      = "default"
-      namespace = data.kubernetes_namespace.operator.metadata[0].name
-    }
-    spec = {
-      address = "http://vault.vault.svc.cluster.local:8200"
-    }
-  }
+# resource "kubernetes_manifest" "vault-auth-default" {
+#   manifest = {
+#     apiVersion = "secrets.hashicorp.com/v1beta1"
+#     kind       = "VaultAuth"
+#     metadata = {
+#       name      = "default"
+#       namespace = data.kubernetes_namespace.operator.metadata[0].name
+#     }
+#     spec = {
+#       method    = "kubernetes"
+#       namespace = vault_auth_backend.default.namespace
+#       mount     = vault_auth_backend.default.path
+#       kubernetes = {
+#         role           = vault_kubernetes_auth_backend_role.dev.role_name
+#         serviceAccount = "default"
+#         audiences = [
+#           "vault",
+#         ]
+#       }
+#     }
+#   }
 
-  field_manager {
-    # force field manager conflicts to be overridden
-    force_conflicts = true
-  }
-}
-
-resource "kubernetes_manifest" "vault-auth-default" {
-  manifest = {
-    apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind       = "VaultAuth"
-    metadata = {
-      name      = "default"
-      namespace = data.kubernetes_namespace.operator.metadata[0].name
-    }
-    spec = {
-      method    = "kubernetes"
-      namespace = vault_auth_backend.default.namespace
-      mount     = vault_auth_backend.default.path
-      kubernetes = {
-        role           = vault_kubernetes_auth_backend_role.dev.role_name
-        serviceAccount = "default"
-        audiences = [
-          "vault",
-        ]
-      }
-    }
-  }
-
-  field_manager {
-    # force field manager conflicts to be overridden
-    force_conflicts = true
-  }
-}
+#   field_manager {
+#     # force field manager conflicts to be overridden
+#     force_conflicts = true
+#   }
+# }
 
 # ====== Dynamic Secrets 시나리오 ======
 resource "kubernetes_manifest" "vault-dynimic-secret" {
