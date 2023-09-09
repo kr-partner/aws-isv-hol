@@ -32,8 +32,7 @@ resource "kubernetes_manifest" "vault-static-auth" {
       namespace = vault_auth_backend.default.namespace
       mount = vault_auth_backend.default.path
       kubernetes = {
-        # role = vault_kubernetes_auth_backend_role.dev.role_name
-        role = vault_kubernetes_auth_backend_role.demo-auth-role.role_name
+        role = vault_kubernetes_auth_backend_role.dev.role_name
         serviceAccount = "default"
         audiences = [
           "vault",

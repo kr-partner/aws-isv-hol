@@ -54,8 +54,7 @@ data "kubernetes_namespace" "operator" {
 
 data "kubernetes_namespace" "demo-ns" {
   metadata {
-    name = var.demo_app_namespace
-    # name = kubernetes_namespace.vso.metadata.namespace
+    name = kubernetes_namespace.demo-ns.metadata[0].name
   }
 }
 

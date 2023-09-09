@@ -52,7 +52,8 @@ resource "kubernetes_manifest" "vault-dynimic-secret" {
     kind       = "VaultDynamicSecret"
     metadata = {
       name      = "vso-db-demo"
-      namespace = kubernetes_namespace.dev.metadata[0].name
+      # namespace = kubernetes_namespace.dev.metadata[0].name
+      namespace = kubernetes_namespace.demo-ns.metadata[0].name
     }
     spec = {
       namespace = vault_auth_backend.default.namespace
@@ -76,14 +77,16 @@ resource "kubernetes_manifest" "vault-dynimic-secret" {
 resource "kubernetes_secret" "db" {
   metadata {
     name      = "vso-db-demo"
-    namespace = kubernetes_namespace.dev.metadata[0].name
+    # namespace = kubernetes_namespace.dev.metadata[0].name
+    namespace = kubernetes_namespace.demo-ns.metadata[0].name
   }
 }
 
 resource "kubernetes_deployment" "example" {
   metadata {
     name      = "vso-db-demo"
-    namespace = kubernetes_namespace.dev.metadata[0].name
+    # namespace = kubernetes_namespace.dev.metadata[0].name
+    namespace = kubernetes_namespace.demo-ns.metadata[0].name
     labels = {
       test = "vso-db-demo"
     }
