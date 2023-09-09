@@ -18,20 +18,23 @@ resource "kubernetes_manifest" "vault-connection-default" {
   }
 }
 
-resource "kubernetes_manifest" "vault-auth-default" {
+resource "kubernetes_manifest" "vault-static-auth" {
   manifest = {
     apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind       = "VaultAuth"
+    kind = "VaultAuth"
     metadata = {
-      name      = "default"
-      namespace = data.kubernetes_namespace.operator.metadata[0].name
+      name = "static-auth"
+      # namespace = data.kubernetes_namespace.operator.metadata[0].name
+      namespace = data.kubernetes_namespace.demo-ns.metadata[0].name
     }
     spec = {
-      method    = "kubernetes"
+      method = "kubernetes"
       namespace = vault_auth_backend.default.namespace
-      mount     = vault_auth_backend.default.path
+      mount = vault_auth_backend.default.path
       kubernetes = {
-        role           = vault_kubernetes_auth_backend_role.dev.role_name
+        # "role" = "role1"
+        # role = vault_kubernetes_auth_backend_role.dev.role_name
+        role = vault_kubernetes_auth_backend_role.static-role.role_name
         serviceAccount = "default"
         audiences = [
           "vault",
@@ -39,7 +42,6 @@ resource "kubernetes_manifest" "vault-auth-default" {
       }
     }
   }
-
   field_manager {
     # force field manager conflicts to be overridden
     force_conflicts = true
@@ -138,16 +140,16 @@ resource "kubernetes_manifest" "vault-static-app" {
                 "periodSeconds" = 3
               }
               "name" = "example"
-              "resources" = {
-                "limits" = {
-                  "cpu" = "0.5"
-                  "memory" = "512Mi"
-                }
-                "requests" = {
-                  "cpu" = "250m"
-                  "memory" = "50Mi"
-                }
-              }
+              # "resources" = {
+              #   "limits" = {
+              #     "cpu" = "0.5"
+              #     "memory" = "512Mi"
+              #   }
+              #   "requests" = {
+              #     "cpu" = "250m"
+              #     "memory" = "50Mi"
+              #   }
+              # }
               "volumeMounts" = [
                 {
                   "mountPath" = "/usr/share/nginx/html"
@@ -202,6 +204,13 @@ resource "kubernetes_manifest" "vault-static-svc" {
 data "kubernetes_namespace" "operator" {
   metadata {
     name = var.operator_namespace
+    # name = kubernetes_namespace.vso.metadata.namespace
+  }
+}
+
+data "kubernetes_namespace" "demo-ns" {
+  metadata {
+    name = var.demo_app_namespace
     # name = kubernetes_namespace.vso.metadata.namespace
   }
 }
