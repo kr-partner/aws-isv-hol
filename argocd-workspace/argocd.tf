@@ -63,9 +63,12 @@ resource "null_resource" "patch_resource" {
       kubectl delete -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
       sleep 10
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
-      sleep 15
+      sleep 20
       kubectl rollout restart deployment argocd-redis -nargocd
       kubectl rollout restart deployment argocd-repo-server -nargocd
+      sleep 20
+      kubectl delete -f ${path.module}/yaml-resources/cmp-plugin.yaml      
+      kubectl apply -f ${path.module}/yaml-resources/cmp-plugin.yaml      
       kubectl rollout restart deployment argocd-redis -nargocd
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
     EOT
