@@ -80,6 +80,18 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
   depends_on = [helm_release.argocd]  
 }
 
+resource "null_resource" "force_update" {
+  triggers = {
+    kubernetes_manifest_id = kubernetes_manifest.deployment_argocd_argocd_repo_server.id
+  }
+
+  provisioner "local-exec" {
+    command = "echo 'Force update triggered'"
+  }
+
+  depends_on = [kubernetes_manifest.deployment_argocd_argocd_repo_server]
+}
+
 resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
 
   manifest = {
@@ -89,7 +101,6 @@ resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
       "annotations" = {
         "meta.helm.sh/release-name" = "argocd"
         "meta.helm.sh/release-namespace" = "argocd"
-        "terraform.io/force-replace": "true"
       }
       "labels" = {
         "app.kubernetes.io/component" = "repo-server"
