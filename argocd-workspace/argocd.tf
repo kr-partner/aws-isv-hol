@@ -21,6 +21,7 @@ data "kubernetes_service" "argocd" {
     name = "argocd-server"
     namespace = "argocd"
   }
+  depends_on = [helm_release.argocd]
 }
 
 resource "kubernetes_manifest" "configmap_argocd_cmp_plugin" {
