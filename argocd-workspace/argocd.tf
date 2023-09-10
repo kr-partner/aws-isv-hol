@@ -81,9 +81,7 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
-  wait {
-    rollout = true
-  }    
+
   manifest = {
     "apiVersion" = "apps/v1"
     "kind" = "Deployment"
@@ -91,6 +89,7 @@ resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
       "annotations" = {
         "meta.helm.sh/release-name" = "argocd"
         "meta.helm.sh/release-namespace" = "argocd"
+        "terraform.io/force-replace": "true"
       }
       "labels" = {
         "app.kubernetes.io/component" = "repo-server"
