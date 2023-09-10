@@ -5,35 +5,10 @@ argocd 배포 시 사용하는 workspace입니다.
 - EKS
 - Vault cluster
 
-## argocd 배포
-argocd는 terraform을 이용하여 배포합니다.
+## argocd avp(argocd vault plugin) 환경 배포
+argocd는 terraform을 이용하여 배포하고 연동되는 정보는 bastion에서 cli로 준비합니다.
 
-
-### 1. Terraform을 활용한 argocd 배포
-
-### 1) [argocd-workspace](./argocd-workspace/)에서 실행
-
-
-```
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
-
-
-```
-# External IP 확인
-EXTERNAL_IP=$(k get svc -n argocd argocd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-echo $EXTERNAL_IP
-
-# admin 계정의 암호 확인
-ARGOPW=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-echo $ARGOPW
-
-# login
-argocd login $EXTERNAL_IP --username admin --password $ARGOPW
-```
-
+### 1. Vault에 테스트 key/value 입력
 
 ```
 # shell 접속
@@ -54,6 +29,8 @@ EOF
 
 exit
 ```
+
+### 2. argocd vault plugin에서 배포 시 참고 할 kubernetes auth 생성
 
 ```
 # enable Kubernetes Auth Method
@@ -85,3 +62,31 @@ kubectl exec -n vault vault-0 -- vault write auth/kubernetes/role/argocd \
   policies=demo \
   ttl=48h
 ```
+
+### 3. Terraform을 활용한 avp 배포
+
+### 3) [argocd-workspace](../argocd-workspace/)에서 실행
+
+```
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+### 4. argocd 정보 확인 및 login
+
+```
+# External IP 확인
+EXTERNAL_IP=$(k get svc -n argocd argocd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo $EXTERNAL_IP
+
+# admin 계정의 암호 확인
+ARGOPW=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+echo $ARGOPW
+
+# login
+argocd login $EXTERNAL_IP --username admin --password $ARGOPW
+```
+
+### 5. sample application 배포
+
