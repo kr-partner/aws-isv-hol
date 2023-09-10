@@ -65,6 +65,8 @@ resource "null_resource" "patch_resource" {
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
       sleep 15
       kubectl rollout restart deployment argocd-redis -nargocd
+      kubectl rollout restart deployment argocd-repo-server -nargocd
+      kubectl rollout restart deployment argocd-redis -nargocd
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
     EOT
   }
