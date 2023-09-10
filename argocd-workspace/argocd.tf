@@ -80,6 +80,8 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "null_resource" "patch_configmap" {
+  depends_on = [helm_release.argocd,kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials,kubernetes_manifest.configmap_argocd_cmp_plugin]  
+
   triggers = {
     # 리소스를 업데이트하려면 트리거 설정
     configmap_patch = base64sha256(file("${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml"))
