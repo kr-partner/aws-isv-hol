@@ -80,7 +80,10 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
   depends_on = [helm_release.argocd]  
 }
 
-resource "kubernetes_patch" "deployment_argocd_argocd_repo_server" {
+resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
+  field_manager {
+    force_conflicts = true 
+  }
   manifest = {
     "apiVersion" = "apps/v1"
     "kind" = "Deployment"
