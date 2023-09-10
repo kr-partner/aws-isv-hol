@@ -83,12 +83,12 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
 resource "null_resource" "patch_configmap" {
   triggers = {
     # 리소스를 업데이트하려면 트리거 설정
-    configmap_patch = base64sha256(file("${path.module}/yaml-resource/deployment_argocd_argocd_repo_server.yaml"))
+    configmap_patch = base64sha256(file("${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml"))
   }
 
   provisioner "local-exec" {
     command = <<-EOT
-      kubectl apply -f ${path.module}/yaml-resource/deployment_argocd_argocd_repo_server.yaml
+      kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
     EOT
   }
 }
