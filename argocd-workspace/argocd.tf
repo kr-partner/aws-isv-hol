@@ -74,8 +74,8 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
     VAULT_ADDR = "http://vault.vault:8200"
   }
 
-  type = "kubernetes.io/basic-auth"
-  
+  type = "Opaque"
+
   depends_on = [helm_release.argocd]  
 }
 
