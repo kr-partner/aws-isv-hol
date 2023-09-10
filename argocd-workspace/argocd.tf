@@ -81,9 +81,7 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
-  lifecycle {
-    create_before_destroy = true
-  }
+  if_exists = "attach"
   manifest = {
     "apiVersion" = "apps/v1"
     "kind" = "Deployment"
