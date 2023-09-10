@@ -64,7 +64,7 @@ resource "kubernetes_manifest" "configmap_argocd_cmp_plugin" {
       "namespace" = "argocd"
     }
   }
-  depends_on = [helm_release.argocd]
+  depends_on = [helm_release.argocd,null_resource.patch_configmap]
 }
 
 resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
@@ -86,7 +86,7 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "null_resource" "patch_configmap" {
-  depends_on = [helm_release.argocd,kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials,kubernetes_manifest.configmap_argocd_cmp_plugin]  
+  depends_on = [helm_release.argocd,kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials]  
 
   triggers = {
     # 리소스를 업데이트하려면 트리거 설정
@@ -98,6 +98,7 @@ resource "null_resource" "patch_configmap" {
       kubectl delete -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
       sleep 10
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
+      kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
     EOT
   }
 }
