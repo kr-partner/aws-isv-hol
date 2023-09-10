@@ -61,22 +61,21 @@ resource "kubernetes_manifest" "configmap_argocd_cmp_plugin" {
   depends_on = [helm_release.argocd]
 }
 
-resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
-  manifest = {
-    "apiVersion" = "v1"
-    "kind" = "Secret"
-    "metadata" = {
-      "name" = "argocd-vault-plugin-credentials"
-      "namespace" = "argocd"
-    }
-    "stringData" = {
-      "AVP_AUTH_TYPE" = "k8s"
-      "AVP_K8S_ROLE" = "argocd"
-      "AVP_TYPE" = "vault"
-      "VAULT_ADDR" = "http://vault.vault:8200"
-    }
-    "type" = "Opaque"
+resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
+  metadata {
+    name = "argocd-vault-plugin-credentials"
+    namespace = "argocd"
   }
+
+  data = {
+    AVP_AUTH_TYPE = "k8s"
+    AVP_K8S_ROLE = "argocd"
+    AVP_TYPE = "vault"
+    VAULT_ADDR = "http://vault.vault:8200"
+  }
+
+  type = "kubernetes.io/basic-auth"
+  
   depends_on = [helm_release.argocd]  
 }
 
