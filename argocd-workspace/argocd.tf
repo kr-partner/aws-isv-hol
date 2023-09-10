@@ -81,6 +81,7 @@ resource "kubernetes_manifest" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "kubernetes_manifest" "deployment_argocd_argocd_repo_server" {
+  force_new = true
   manifest = {
     "apiVersion" = "apps/v1"
     "kind" = "Deployment"
