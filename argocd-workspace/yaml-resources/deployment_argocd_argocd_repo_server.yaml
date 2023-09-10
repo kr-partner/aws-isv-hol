@@ -4,7 +4,6 @@ metadata:
   annotations:
     meta.helm.sh/release-name: argocd
     meta.helm.sh/release-namespace: argocd
-  generation: 12
   labels:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/instance: argocd

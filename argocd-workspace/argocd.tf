@@ -87,6 +87,8 @@ resource "null_resource" "patch_configmap" {
 
   provisioner "local-exec" {
     command = <<-EOT
+      kubectl delete -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
+      sleep 10
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
     EOT
   }
