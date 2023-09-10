@@ -14,9 +14,10 @@ resource "helm_release" "argocd" {
     name = "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
     value = "internet-facing"
   }
+  depends_on = [kubernetes_namespace.argocd]
 }
 
-resource "kubernetes_namespace" "vault" {
+resource "kubernetes_namespace" "argocd" {
   metadata {
     name = "argocd"
   }
@@ -64,7 +65,7 @@ resource "kubernetes_manifest" "configmap_argocd_cmp_plugin" {
       "namespace" = "argocd"
     }
   }
-  depends_on = [helm_release.argocd,null_resource.patch_configmap]
+  depends_on = [helm_release.argocd,null_resource.patch_resource]
 }
 
 resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
@@ -85,7 +86,7 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
   depends_on = [helm_release.argocd]  
 }
 
-resource "null_resource" "patch_configmap" {
+resource "null_resource" "patch_resource" {
   depends_on = [helm_release.argocd,kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials]  
 
   triggers = {
@@ -98,6 +99,7 @@ resource "null_resource" "patch_configmap" {
       kubectl delete -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
       sleep 10
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
+      kubectl apply -f ${path.module}/yaml-resources/cmp-plugin.yaml
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
     EOT
   }
