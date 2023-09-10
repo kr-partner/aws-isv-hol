@@ -4,7 +4,7 @@ resource "helm_release" "argocd" {
   repository  = "https://argoproj.github.io/argo-helm"
   version     = "5.45.3"
   chart       = "argo-cd"
-  create_namespace = true
+  create_namespace = false
   
   set {
     name = "server.service.type"  
@@ -13,6 +13,12 @@ resource "helm_release" "argocd" {
   set {
     name = "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
     value = "internet-facing"
+  }
+}
+
+resource "kubernetes_namespace" "vault" {
+  metadata {
+    name = "argocd"
   }
 }
 
