@@ -96,7 +96,7 @@ resource "aws_instance" "ec2_bastion_host" {
             terraform -install-autocomplete
 
             # Delete files
-            rm -rf kube-ps1 aws krew-linux_amd64 yh-linux-amd64.zip awscliv2.zip krew-linux_amd64.tar.gz
+            rm -rf aws krew-linux_amd64 yh-linux-amd64.zip awscliv2.zip krew-linux_amd64.tar.gz
 
             # Create SSH Keypair
             ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa

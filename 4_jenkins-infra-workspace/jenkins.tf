@@ -6,7 +6,7 @@ resource "helm_release" "jenkins" {
   wait_for_jobs    = true
 
   repository = "https://charts.jenkins.io"
-  chart      = "jenkinsci"
+  chart      = "jenkins"
 
   set {
     name  = "controller.serviceType"
