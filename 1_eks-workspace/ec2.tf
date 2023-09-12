@@ -79,8 +79,8 @@ resource "aws_instance" "ec2_bastion_host" {
             kubectl krew install ctx ns get-all  # ktop df-pv mtail tree
 
             # Install Docker
-            amazon-linux-extras install docker -y
-            systemctl start docker && systemctl enable docker
+            #amazon-linux-extras install docker -y
+            #systemctl start docker && systemctl enable docker
 
             # CLUSTER_NAME
             export CLUSTER_NAME=${var.eks_cluster_name}
@@ -94,6 +94,9 @@ resource "aws_instance" "ec2_bastion_host" {
             sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
             sudo yum -y install terraform
             terraform -install-autocomplete
+
+            # Delete files
+            rm -rf kube-ps1 aws krew-linux_amd64 yh-linux-amd64.zip awscliv2.zip krew-linux_amd64.tar.gz
 
             # Create SSH Keypair
             ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
