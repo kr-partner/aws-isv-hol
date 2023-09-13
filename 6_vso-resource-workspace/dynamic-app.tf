@@ -98,7 +98,6 @@ resource "kubernetes_deployment" "example" {
     }
   }
 
-
   spec {
     replicas = 2
 
@@ -132,7 +131,7 @@ resource "kubernetes_deployment" "example" {
           image = "postgres:latest"
           name  = "demo"
           command = [
-            "sh", "-c", "while : ; do psql postgresql://$PGUSERNAME@${local.postgres_host}/postgres?sslmode=disable -c 'select 1;' ; sleep 5; done"
+            "sh", "-c", "while : ; do psql postgresql://$PGUSERNAME@${local.postgres_host}/postgres?sslmode=disable -c 'select 1;' ; sleep 10; done"
           ]
 
           env {
@@ -161,16 +160,16 @@ resource "kubernetes_deployment" "example" {
             read_only  = true
           }
 
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "64Mi"
-            }
-            requests = {
-              cpu    = "250m"
-              memory = "50Mi"
-            }
-          }
+          # resources {
+          #   limits = {
+          #     cpu    = "0.5"
+          #     memory = "64Mi"
+          #   }
+          #   requests = {
+          #     cpu    = "250m"
+          #     memory = "50Mi"
+          #   }
+          # }
         }
       }
     }
