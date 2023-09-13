@@ -42,3 +42,7 @@ variable "db_role" {
 variable "vault_token" {
   default = "root"
 }
+
+variable "postgres_password" {
+  default = "HashiCorp@"
+}
