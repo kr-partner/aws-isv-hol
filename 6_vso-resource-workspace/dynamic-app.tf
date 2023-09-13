@@ -101,11 +101,11 @@ resource "kubernetes_deployment" "example" {
   spec {
     replicas = 2
 
-    strategy {
-      rolling_update {
-        max_unavailable = "1"
-      }
-    }
+    # strategy {
+    #   rolling_update {
+    #     max_unavailable = "1"
+    #   }
+    # }
 
     selector {
       match_labels = {
