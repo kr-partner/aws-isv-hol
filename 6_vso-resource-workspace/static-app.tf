@@ -182,11 +182,15 @@ resource "kubernetes_manifest" "vault-static-svc" {
     "metadata" = {
       "name" = "vso-static-demo-svc"
       "namespace" = "demo-ns"
+      "annotations" = {
+        "service.beta.kubernetes.io/aws-load-balancer-scheme" = "internet-facing"
+        "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb"
+      }
     }
     "spec" = {
       "ports" = [
         {
-          "nodePort" = 30080
+          # "nodePort" = 30080
           "port" = 80
           "targetPort" = 80
         },
@@ -194,7 +198,7 @@ resource "kubernetes_manifest" "vault-static-svc" {
       "selector" = {
         "test" = "vso-static-demo"
       }
-      "type" = "NodePort"
+      "type" = "LoadBalancer"
     }
   }
 }
