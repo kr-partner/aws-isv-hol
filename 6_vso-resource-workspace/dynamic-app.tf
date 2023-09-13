@@ -99,7 +99,7 @@ resource "kubernetes_deployment" "example" {
   }
 
   spec {
-    replicas = 2
+    replicas = 1
 
     # strategy {
     #   rolling_update {

@@ -64,3 +64,10 @@ data "kubernetes_service" "vault" {
     namespace = "vault"
   }
 }
+
+data "kubernetes_service" "static_webapp" {
+  metadata {
+    name = "vso-static-demo-svc"
+    namespace = "demo-ns"
+  }
+}
