@@ -1,3 +1,7 @@
+data "external" "env" {
+  program = ["${path.module}/env.sh"]
+}
+
 resource "aws_instance" "ec2_bastion_host" {
 
   depends_on = [
@@ -6,7 +10,7 @@ resource "aws_instance" "ec2_bastion_host" {
 
   ami                         = data.aws_ami.amazon_linux_2.id
   associate_public_ip_address = true
-  instance_type               = "t2.micro"
+  instance_type               = "t2.small"
   key_name                    = var.ec2_key_pair
   vpc_security_group_ids      = ["${aws_security_group.security_group_eks_cluster.id}"]
   subnet_id                   = element(module.vpc.public_subnets, 0)
@@ -101,8 +105,10 @@ resource "aws_instance" "ec2_bastion_host" {
             # Create SSH Keypair
             ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
 
-            aws configure set aws_access_key_id ${var.AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${var.AWS_SECRET_ACCESS_KEY} && aws configure set region ${var.aws_region}
+            # aws configure set aws_access_key_id ${var.AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${var.AWS_SECRET_ACCESS_KEY} && aws configure set region ${var.aws_region}
             # aws configure set aws_access_key_id ${var.AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${var.AWS_SECRET_ACCESS_KEY} && aws configure set aws_session_token ${var.AWS_SESSION_TOKEN} && aws configure set region ${var.aws_region}
+            # aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set aws_session_token ${data.external.env.result.aws_token} && aws configure set region ${var.aws_region}
+            aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set region ${var.aws_region}
             EOF
 
   user_data_replace_on_change = true

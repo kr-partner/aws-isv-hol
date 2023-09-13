@@ -5,7 +5,7 @@ terraform {
 
     workspaces {
       # 참석자의 워크스페이스명 기입
-      name = "eks-app-of-apps"
+      name = "aws-isv-hol"
     }
   }
 }

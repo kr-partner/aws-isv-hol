@@ -12,12 +12,13 @@ variable "eks_cluster_version" {
 
 variable "ec2_key_pair" {
   # 이벤트 엔진에서 기본 제공되는 Key Pair 사용
-  # default = "ee-default-keypair"
-  default = "hw-key"
+  default = "ee-default-keypair"
+  # default = "hw-key"
 }
 
 variable "worker_node_instance_type" {
-  default = ["t3.medium"]
+  # default = ["t3.medium"]
+  default = ["t3.xlarge"]
 }
 
 variable "worker_node_min_size" {
@@ -33,6 +34,7 @@ variable "worker_node_desired_size" {
 }
 
 variable "aws_region" {
+# variable "AWS_DEFAULT_REGION" {
   # default = "ap-northeast-2"
   default = "us-east-1"
 }
