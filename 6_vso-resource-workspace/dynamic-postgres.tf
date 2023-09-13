@@ -13,8 +13,8 @@ resource "helm_release" "postgres" {
     value = "true"
   }
   set {
-    name  = "auth.audit.logConnections"
-    value = "true"
+    name  = "auth.postgresPassword"
+    value = "HashiCorp@"
   }
 }
 
@@ -61,6 +61,8 @@ resource "vault_database_secret_backend_role" "postgres" {
   backend   = vault_database_secrets_mount.db.path
   name      = var.db_role
   db_name   = vault_database_secrets_mount.db.postgresql[0].name
+  default_ttl = "1m"
+  max_ttl = "1m"
   creation_statements = [
     "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
     "GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";",
