@@ -61,8 +61,8 @@ resource "vault_database_secret_backend_role" "postgres" {
   backend   = vault_database_secrets_mount.db.path
   name      = var.db_role
   db_name   = vault_database_secrets_mount.db.postgresql[0].name
-  default_ttl = "1m"
-  max_ttl = "1m"
+  default_ttl = "60"
+  max_ttl = "60"
   creation_statements = [
     "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
     "GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";",
