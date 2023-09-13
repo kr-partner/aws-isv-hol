@@ -15,13 +15,13 @@ argocd는 terraform을 이용하여 배포하고 연동되는 정보는 bastion�
 kubectl exec -n vault vault-0 -it -- sh
 
 # enable kv-v2 engine in Vault
-vault secrets enable kv-v2
+kubectl exec -n vault vault-0 -it -- vault secrets enable kv-v2
 
 # create kv-v2 secret with two keys
-vault kv put kv-v2/demo user="secret_user" password="secret_password"
+kubectl exec -n vault vault-0 -it -- vault kv put kv-v2/demo user="secret_user" password="secret_password"
 
 # create policy to enable reading above secret
-vault policy write demo - <<EOF
+kubectl exec -n vault vault-0 -it -- vault policy write demo - <<EOF
 path "kv-v2/data/demo" {
   capabilities = ["read"]
 }
@@ -34,26 +34,12 @@ exit
 
 ```
 # enable Kubernetes Auth Method
-$ kubectl exec -n vault vault-0 -- vault auth enable kubernetes
+kubectl exec -n vault vault-0 -- vault auth enable kubernetes
 
-# get Kubernetes host address
-# K8S_HOST="https://kubernetes.default.svc"
-# K8S_HOST="https://$(env | grep KUBERNETES_PORT_443_TCP_ADDR| cut -f2 -d'='):443"
-K8S_HOST="https://$( kubectl exec -n vault vault-0 -- env | grep KUBERNETES_PORT_443_TCP_ADDR| cut -f2 -d'='):443"
-
-# get Service Account token from Vault Pod
-#SA_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-SA_TOKEN=$(kubectl exec -n vault vault-0 -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-
-# get Service Account CA certificate from Vault Pod
-#SA_CERT=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
-SA_CERT=$(kubectl exec -n vault vault-0 -- cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
-
-# configure Kubernetes Auth Method
 kubectl exec -n vault vault-0 -- vault write auth/kubernetes/config \
-    token_reviewer_jwt=$SA_TOKEN \
-    kubernetes_host=$K8S_HOST \
-    kubernetes_ca_cert=$SA_CERT
+  token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+  kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
+  kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
 # create authenticate Role for ArgoCD
 kubectl exec -n vault vault-0 -- vault write auth/kubernetes/role/argocd \
@@ -61,6 +47,7 @@ kubectl exec -n vault vault-0 -- vault write auth/kubernetes/role/argocd \
   bound_service_account_namespaces=argocd \
   policies=demo \
   ttl=48h
+  
 ```
 
 ### 3. Terraform을 활용한 avp 배포
@@ -68,9 +55,9 @@ kubectl exec -n vault vault-0 -- vault write auth/kubernetes/role/argocd \
 ### 3) [argocd-workspace](../argocd-workspace/)에서 실행
 
 ```
- terraform init
- terraform plan
- terraform apply --auto-approve
+terraform init
+terraform plan
+terraform apply --auto-approve
 ```
 
 #### terraform으로 리소스 생성이 정상적으로 되지 않을 경우 
@@ -114,8 +101,6 @@ echo $EXTERNAL_IP
 ARGOPW=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 echo $ARGOPW
 
-# argocd login 시도로 argocd lb url 및 password 체크
-argocd login $EXTERNAL_IP --username admin --password $ARGOPW
 ```
 
 ### 5. sample application 배포
@@ -146,5 +131,5 @@ spec:
       selfHeal: true
 EOF
 
- kubectl apply -f sample.yaml
+kubectl apply -f sample.yaml
 ```
