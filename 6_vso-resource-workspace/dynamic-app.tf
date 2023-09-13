@@ -1,22 +1,22 @@
 # Done
-resource "kubernetes_manifest" "vault-connection-default" {
-  manifest = {
-    apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind       = "VaultConnection"
-    metadata = {
-      name      = "default"
-      namespace = data.kubernetes_namespace.operator.metadata[0].name
-    }
-    spec = {
-      address = "http://vault.vault.svc.cluster.local:8200"
-    }
-  }
+# resource "kubernetes_manifest" "vault-connection-default" {
+#   manifest = {
+#     apiVersion = "secrets.hashicorp.com/v1beta1"
+#     kind       = "VaultConnection"
+#     metadata = {
+#       name      = "default"
+#       namespace = data.kubernetes_namespace.operator.metadata[0].name
+#     }
+#     spec = {
+#       address = "http://vault.vault.svc.cluster.local:8200"
+#     }
+#   }
 
-  field_manager {
-    # force field manager conflicts to be overridden
-    force_conflicts = true
-  }
-}
+#   field_manager {
+#     # force field manager conflicts to be overridden
+#     force_conflicts = true
+#   }
+# }
 
 # Done
 resource "kubernetes_manifest" "vault-auth-default" {

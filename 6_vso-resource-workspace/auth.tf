@@ -60,16 +60,17 @@ resource "vault_kubernetes_auth_backend_config" "db" {
 }
 
 # kubernetes auth roles
-# resource "vault_kubernetes_auth_backend_role" "dev" {
-#   namespace                        = vault_auth_backend.default.namespace
-#   backend                          = vault_kubernetes_auth_backend_config.dev.backend
-#   role_name                        = local.auth_role
-#   bound_service_account_names      = ["default"]
-#   # bound_service_account_namespaces = [kubernetes_namespace.dev.metadata[0].name]
-#   bound_service_account_namespaces = [kubernetes_namespace.demo-ns.metadata[0].name]
-#   token_period                     = 120
-#   token_policies = [
-#     vault_policy.db.name,
-#   ]
-#   audience = "vault"
-# }
+resource "vault_kubernetes_auth_backend_role" "dev" {
+  namespace                        = vault_auth_backend.default.namespace
+  backend                          = vault_kubernetes_auth_backend_config.dev.backend
+  role_name                        = local.auth_role
+  bound_service_account_names      = ["default"]
+  # bound_service_account_namespaces = [kubernetes_namespace.dev.metadata[0].name]
+  bound_service_account_namespaces = [kubernetes_namespace.demo-ns.metadata[0].name]
+  token_period                     = 120
+  token_policies = [
+    # vault_policy.db.name,
+    vault_policy.demo-auth-policy.name,
+  ]
+  audience = "vault"
+}
