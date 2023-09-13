@@ -20,6 +20,10 @@ resource "helm_release" "jenkins" {
     name  = "controller.serviceAnnotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
     value = "internet-facing"
   }
+  set {
+    name  = "controller.numExecutors"
+    value = "1"
+  }
 }
 
 resource "kubernetes_namespace" "jenkins" {

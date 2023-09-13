@@ -9,7 +9,7 @@ resource "helm_release" "vault" {
   chart      = "vault"
 
   set {
-    name  = "server.enabled"
+    name  = "server.dev.enabled"
     value = "true"
   }
   set {
