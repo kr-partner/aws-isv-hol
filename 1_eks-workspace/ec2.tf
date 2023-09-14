@@ -107,8 +107,8 @@ resource "aws_instance" "ec2_bastion_host" {
 
             # aws configure set aws_access_key_id ${var.AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${var.AWS_SECRET_ACCESS_KEY} && aws configure set region ${var.aws_region}
             # aws configure set aws_access_key_id ${var.AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${var.AWS_SECRET_ACCESS_KEY} && aws configure set aws_session_token ${var.AWS_SESSION_TOKEN} && aws configure set region ${var.aws_region}
-            # aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set aws_session_token ${data.external.env.result.aws_token} && aws configure set region ${var.aws_region}
-            aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set region ${var.aws_region}
+            # aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set region ${var.aws_region}
+            aws configure set aws_access_key_id ${data.external.env.result.aws_access_key} && aws configure set aws_secret_access_key ${data.external.env.result.aws_secret_key} && aws configure set aws_session_token ${data.external.env.result.aws_token} && aws configure set region ${var.aws_region}
             EOF
 
   user_data_replace_on_change = true

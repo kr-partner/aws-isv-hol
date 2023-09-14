@@ -6,3 +6,4 @@ cat <<EOF
   "aws_token": "$AWS_SESSION_TOKEN"
 }
 EOF
+# Windows System에서 동작불가
