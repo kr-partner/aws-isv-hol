@@ -4,16 +4,19 @@ resource "terraform_data" "userpass_token" {
     command = "kubectl exec -it -n vault vault-0 -- vault login -method=userpass username=jenkins password=jenkinspwd | grep token | grep hvs > token.txt"
   }
 
-  triggers_replace = [
-    vault_auth_backend.userpass
-  ]
-  depends_on = [vault_auth_backend.userpass]
+  provisioner "local-exec" {
+    command = "kubectl exec -it -n vault vault-0 -- vault login root"
+  }
+
+  # triggers_replace = [
+  #   vault_auth_backend.userpass
+  # ]
+  depends_on = [terraform_data.write_jenkinsuser]
 }
 
 data "local_file" "output" {
-  filename = "${path.module}/token.txt"
-
-  depends_on = [vault_auth_backend.userpass]
+  filename   = "${path.module}/token.txt"
+  depends_on = [terraform_data.userpass_token]
 }
 
 locals {
