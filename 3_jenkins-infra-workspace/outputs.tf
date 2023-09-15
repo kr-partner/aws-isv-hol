@@ -5,3 +5,9 @@ output "jenkins_external_ip" {
 output "token_output" {
   value = local.token_output
 }
+
+output "jenkins_password" {
+  value = data.kubernetes_secret.jenkins
+  sensitive = true
+  # value = nonsensitive(data.kubernetes_secret.jenkins)
+}

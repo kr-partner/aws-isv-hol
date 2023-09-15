@@ -16,8 +16,8 @@ resource "vault_kv_secret_v2" "kv-v2" {
   )
 }
 
-resource "vault_policy" "demo-auth-policy" {
-  name = "demo-auth-policy"
+resource "vault_policy" "jenkins_auth_policy" {
+  name = "jenkinscreds"
   policy = <<EOT
 path "jks/*" {
   capabilities = ["read", "list"]
