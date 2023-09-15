@@ -9,3 +9,6 @@ variable "k8s_config_path" {
 variable "k8s_host" {
   default = "https://kubernetes.default.svc"
 }
+variable "vault_token" {
+  default = "root"
+}
