@@ -21,18 +21,18 @@ resource "kubernetes_manifest" "vault-connection-default" {
 resource "kubernetes_manifest" "vault-static-auth" {
   manifest = {
     apiVersion = "secrets.hashicorp.com/v1beta1"
-    kind = "VaultAuth"
+    kind       = "VaultAuth"
     metadata = {
       name = "static-auth"
       # namespace = data.kubernetes_namespace.operator.metadata[0].name
       namespace = data.kubernetes_namespace.demo-ns.metadata[0].name
     }
     spec = {
-      method = "kubernetes"
+      method    = "kubernetes"
       namespace = vault_auth_backend.default.namespace
-      mount = vault_auth_backend.default.path
+      mount     = vault_auth_backend.default.path
       kubernetes = {
-        role = vault_kubernetes_auth_backend_role.dev.role_name
+        role           = vault_kubernetes_auth_backend_role.dev.role_name
         serviceAccount = "default"
         audiences = [
           "vault",
@@ -50,20 +50,20 @@ resource "kubernetes_manifest" "vault-static-auth" {
 resource "kubernetes_manifest" "vault-static-secret" {
   manifest = {
     "apiVersion" = "secrets.hashicorp.com/v1beta1"
-    "kind" = "VaultStaticSecret"
+    "kind"       = "VaultStaticSecret"
     "metadata" = {
-      "name" = "vault-kvv2-app"
+      "name"      = "vault-kvv2-app"
       "namespace" = "demo-ns"
     }
     "spec" = {
       "destination" = {
         "create" = true
-        "name" = "secret-kvv2"
+        "name"   = "secret-kvv2"
       }
-      "mount" = "kvv2"
-      "path" = "webapp/config"
+      "mount"        = "kvv2"
+      "path"         = "webapp/config"
       "refreshAfter" = "30s"
-      "type" = "kv-v2"
+      "type"         = "kv-v2"
       "vaultAuthRef" = "static-auth"
     }
   }
@@ -72,12 +72,12 @@ resource "kubernetes_manifest" "vault-static-secret" {
 resource "kubernetes_manifest" "vault-static-app" {
   manifest = {
     "apiVersion" = "apps/v1"
-    "kind" = "Deployment"
+    "kind"       = "Deployment"
     "metadata" = {
       "labels" = {
         "test" = "vso-static-demo"
       }
-      "name" = "vso-static-demo"
+      "name"      = "vso-static-demo"
       "namespace" = "demo-ns"
     }
     "spec" = {
@@ -109,15 +109,15 @@ resource "kubernetes_manifest" "vault-static-app" {
                 "-c",
               ]
               "image" = "alpine:latest"
-              "name" = "vso-static"
+              "name"  = "vso-static"
               "volumeMounts" = [
                 {
                   "mountPath" = "/tmp/empty"
-                  "name" = "html"
+                  "name"      = "html"
                 },
                 {
                   "mountPath" = "/tmp/static-secrets"
-                  "name" = "static-secrets"
+                  "name"      = "static-secrets"
                 },
               ]
             },
@@ -127,7 +127,7 @@ resource "kubernetes_manifest" "vault-static-app" {
                 "httpGet" = {
                   "httpHeaders" = [
                     {
-                      "name" = "X-Custom-Header"
+                      "name"  = "X-Custom-Header"
                       "value" = "Awesome"
                     },
                   ]
@@ -135,7 +135,7 @@ resource "kubernetes_manifest" "vault-static-app" {
                   "port" = 80
                 }
                 "initialDelaySeconds" = 3
-                "periodSeconds" = 3
+                "periodSeconds"       = 3
               }
               "name" = "example"
               # "resources" = {
@@ -151,8 +151,8 @@ resource "kubernetes_manifest" "vault-static-app" {
               "volumeMounts" = [
                 {
                   "mountPath" = "/usr/share/nginx/html"
-                  "name" = "html"
-                  "readOnly" = true
+                  "name"      = "html"
+                  "readOnly"  = true
                 },
               ]
             },
@@ -166,7 +166,7 @@ resource "kubernetes_manifest" "vault-static-app" {
             },
             {
               "emptyDir" = {}
-              "name" = "html"
+              "name"     = "html"
             },
           ]
         }
@@ -178,20 +178,20 @@ resource "kubernetes_manifest" "vault-static-app" {
 resource "kubernetes_manifest" "vault-static-svc" {
   manifest = {
     "apiVersion" = "v1"
-    "kind" = "Service"
+    "kind"       = "Service"
     "metadata" = {
-      "name" = "vso-static-demo-svc"
+      "name"      = "vso-static-demo-svc"
       "namespace" = "demo-ns"
       "annotations" = {
         "service.beta.kubernetes.io/aws-load-balancer-scheme" = "internet-facing"
-        "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb"
+        "service.beta.kubernetes.io/aws-load-balancer-type"   = "nlb"
       }
     }
     "spec" = {
       "ports" = [
         {
           # "nodePort" = 30080
-          "port" = 80
+          "port"       = 80
           "targetPort" = 80
         },
       ]

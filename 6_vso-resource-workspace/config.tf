@@ -6,18 +6,18 @@ resource "vault_mount" "kvv2" {
 }
 
 resource "vault_kv_secret_v2" "example" {
-  mount                      = "${vault_mount.kvv2.path}"
-  name                       = "webapp/config"
-  data_json                  = jsonencode(
-  {
-    username       = "static-user-kvv2",
-    password       = "static-password-kvv2"
-  }
+  mount = vault_mount.kvv2.path
+  name  = "webapp/config"
+  data_json = jsonencode(
+    {
+      username = "static-user-kvv2",
+      password = "static-password-kvv2"
+    }
   )
 }
 
 resource "vault_policy" "demo-auth-policy" {
-  name = "demo-auth-policy"
+  name   = "demo-auth-policy"
   policy = <<EOT
 path "kvv2/*" {
   capabilities = ["read"]

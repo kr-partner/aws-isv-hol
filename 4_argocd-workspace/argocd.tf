@@ -1,17 +1,17 @@
 resource "helm_release" "argocd" {
-  name        = "argocd"
-  namespace   = "argocd"
-  repository  = "https://argoproj.github.io/argo-helm"
-  version     = "5.45.3"
-  chart       = "argo-cd"
+  name             = "argocd"
+  namespace        = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  version          = "5.45.3"
+  chart            = "argo-cd"
   create_namespace = false
-  
+
   set {
-    name = "server.service.type"  
+    name  = "server.service.type"
     value = "LoadBalancer"
   }
   set {
-    name = "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
+    name  = "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-scheme"
     value = "internet-facing"
   }
   depends_on = [kubernetes_namespace.argocd]
@@ -25,7 +25,7 @@ resource "kubernetes_namespace" "argocd" {
 
 data "kubernetes_service" "argocd" {
   metadata {
-    name = "argocd-server"
+    name      = "argocd-server"
     namespace = "argocd"
   }
   depends_on = [helm_release.argocd]
@@ -33,24 +33,24 @@ data "kubernetes_service" "argocd" {
 
 resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
   metadata {
-    name = "argocd-vault-plugin-credentials"
+    name      = "argocd-vault-plugin-credentials"
     namespace = "argocd"
   }
 
   data = {
     AVP_AUTH_TYPE = "k8s"
-    AVP_K8S_ROLE = "argocd"
-    AVP_TYPE = "vault"
-    VAULT_ADDR = "http://vault.vault:8200"
+    AVP_K8S_ROLE  = "argocd"
+    AVP_TYPE      = "vault"
+    VAULT_ADDR    = "http://vault.vault:8200"
   }
 
   type = "Opaque"
 
-  depends_on = [helm_release.argocd]  
+  depends_on = [helm_release.argocd]
 }
 
 resource "null_resource" "patch_resource" {
-  depends_on = [helm_release.argocd,kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials]  
+  depends_on = [helm_release.argocd, kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials]
 
   triggers = {
     # 리소스를 업데이트하려면 트리거 설정

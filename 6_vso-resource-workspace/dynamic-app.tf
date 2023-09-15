@@ -55,15 +55,15 @@ resource "kubernetes_manifest" "vault-dynimic-secret" {
     apiVersion = "secrets.hashicorp.com/v1beta1"
     kind       = "VaultDynamicSecret"
     metadata = {
-      name      = "vso-db-demo"
+      name = "vso-db-demo"
       # namespace = kubernetes_namespace.dev.metadata[0].name
       namespace = kubernetes_namespace.demo-ns.metadata[0].name
     }
     spec = {
       # namespace = vault_auth_backend.default.namespace
-      namespace = vault_auth_backend.default.namespace
-      mount     = vault_database_secrets_mount.db.path
-      path      = local.db_creds_path
+      namespace    = vault_auth_backend.default.namespace
+      mount        = vault_database_secrets_mount.db.path
+      path         = local.db_creds_path
       vaultAuthRef = "dynamic-auth"
       destination = {
         create : false
@@ -82,7 +82,7 @@ resource "kubernetes_manifest" "vault-dynimic-secret" {
 
 resource "kubernetes_secret" "db" {
   metadata {
-    name      = "vso-db-demo"
+    name = "vso-db-demo"
     # namespace = kubernetes_namespace.dev.metadata[0].name
     namespace = kubernetes_namespace.demo-ns.metadata[0].name
   }
@@ -90,7 +90,7 @@ resource "kubernetes_secret" "db" {
 
 resource "kubernetes_deployment" "example" {
   metadata {
-    name      = "vso-db-demo"
+    name = "vso-db-demo"
     # namespace = kubernetes_namespace.dev.metadata[0].name
     namespace = kubernetes_namespace.demo-ns.metadata[0].name
     labels = {

@@ -7,7 +7,7 @@ output "token_output" {
 }
 
 output "jenkins_password" {
-  value = data.kubernetes_secret.jenkins
+  value     = data.kubernetes_secret.jenkins
   sensitive = true
   # value = nonsensitive(data.kubernetes_secret.jenkins)
 }

@@ -25,13 +25,13 @@ provider "vault" {
 provider "helm" {
   kubernetes {
     # config_context = var.k8s_config_context
-    config_path    = var.k8s_config_path
+    config_path = var.k8s_config_path
   }
 }
 
 provider "kubernetes" {
   # config_context = var.k8s_config_context
-  config_path    = var.k8s_config_path
+  config_path = var.k8s_config_path
 }
 
 resource "kubernetes_namespace" "demo-ns" {
@@ -60,14 +60,14 @@ data "kubernetes_namespace" "demo-ns" {
 
 data "kubernetes_service" "vault" {
   metadata {
-    name = "vault-ui"
+    name      = "vault-ui"
     namespace = "vault"
   }
 }
 
 data "kubernetes_service" "static_webapp" {
   metadata {
-    name = "vso-static-demo-svc"
+    name      = "vso-static-demo-svc"
     namespace = "demo-ns"
   }
 }

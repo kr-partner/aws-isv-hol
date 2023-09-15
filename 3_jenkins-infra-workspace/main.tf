@@ -18,13 +18,13 @@ terraform {
 provider "helm" {
   kubernetes {
     # config_context = var.k8s_config_context
-    config_path    = var.k8s_config_path
+    config_path = var.k8s_config_path
   }
 }
 
 provider "kubernetes" {
   # config_context = var.k8s_config_context
-  config_path    = var.k8s_config_path
+  config_path = var.k8s_config_path
 }
 
 provider "vault" {
@@ -34,7 +34,7 @@ provider "vault" {
 
 data "kubernetes_service" "vault" {
   metadata {
-    name = "vault-ui"
+    name      = "vault-ui"
     namespace = "vault"
   }
 }
