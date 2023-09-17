@@ -13,3 +13,11 @@ variable "k8s_host" {
 variable "vault_token" {
   default = "root"
 }
+
+variable "user" {
+  default = "secret_user"
+}
+
+variable "passowrd" {
+  default = "secret_password"
+}

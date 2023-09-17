@@ -10,8 +10,8 @@ resource "vault_kv_secret_v2" "kv-v2" {
   name  = "demo"
   data_json = jsonencode(
     {
-      user = "secret_user",
-      password = "secret_password"
+      user = var.user,
+      password = var.password
     }
   )
 }

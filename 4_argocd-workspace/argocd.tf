@@ -49,17 +49,15 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
   depends_on = [helm_release.argocd]
 }
 
-resource "null_resource" "patch_resource" {
+resource "terraform_data" "cluster" {
   depends_on = [helm_release.argocd, kubernetes_secret.secret_argocd_argocd_vault_plugin_credentials]
 
-  triggers = {
-    # 리소스를 업데이트하려면 트리거 설정
+  triggers_replace = {
     configmap_patch = base64sha256(file("${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml"))
   }
 
   provisioner "local-exec" {
     command = <<-EOT
-      kubectl apply -f ${path.module}/yaml-resources/cmp-plugin.yaml
       kubectl delete -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
       sleep 10
       kubectl apply -f ${path.module}/yaml-resources/deployment_argocd_argocd_repo_server.yaml
@@ -67,7 +65,6 @@ resource "null_resource" "patch_resource" {
       kubectl rollout restart deployment argocd-redis -nargocd
       kubectl rollout restart deployment argocd-repo-server -nargocd
       sleep 20
-      kubectl delete -f ${path.module}/yaml-resources/cmp-plugin.yaml      
       kubectl apply -f ${path.module}/yaml-resources/cmp-plugin.yaml      
       kubectl rollout restart deployment argocd-redis -nargocd
       kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
