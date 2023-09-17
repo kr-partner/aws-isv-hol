@@ -1,64 +1,53 @@
 ## Repo Server
 repoServer:
-  # -- Repo server name
   name: repo-server
-
-  # -- The number of repo server pods to run
   replicas: 1
-  # -- envFrom to pass to repo server
-  # @default -- `[]` (See [values.yaml])
-  envFrom: []
-  # - configMapRef:
-  #     name: config-map-name
-  # - secretRef:
-  #     name: secret-name
   extraContainers:
-    - name: avp-helm
-      command: [/var/run/argocd/argocd-cmp-server]
-      image: quay.io/argoproj/argocd:v2.7.4
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-      volumeMounts:
-        - mountPath: /var/run/argocd
-          name: var-files
-        - mountPath: /home/argocd/cmp-server/plugins
-          name: plugins
-        - mountPath: /tmp
-          name: tmp
+  - name: avp-helm
+    command: [/var/run/argocd/argocd-cmp-server]
+    image: quay.io/argoproj/argocd:v2.7.4
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 999
+    volumeMounts:
+      - mountPath: /var/run/argocd
+        name: var-files
+      - mountPath: /home/argocd/cmp-server/plugins
+        name: plugins
+      - mountPath: /tmp
+        name: tmp
 
-        # Register plugins into sidecar
-        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-          subPath: avp-helm.yaml
-          name: cmp-plugin
+      # Register plugins into sidecar
+      - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+        subPath: avp-helm.yaml
+        name: cmp-plugin
 
-        # Important: Mount tools into $PATH
-        - name: custom-tools
-          subPath: argocd-vault-plugin
-          mountPath: /usr/local/bin/argocd-vault-plugin
+      # Important: Mount tools into $PATH
+      - name: custom-tools
+        subPath: argocd-vault-plugin
+        mountPath: /usr/local/bin/argocd-vault-plugin
+
   # -- Init containers to add to the repo server pods
   initContainers: 
-    - name: download-tools
-      image: alpine/curl
-      env:
-        - name: AVP_VERSION
-          value: 1.15.0
-      command: [sh, -c]
-      args:
-        - >-
-          curl -L https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v$(AVP_VERSION)/argocd-vault-plugin_$(AVP_VERSION)_linux_amd64 -o argocd-vault-plugin &&
-          chmod +x argocd-vault-plugin &&
-          mv argocd-vault-plugin /custom-tools/
-      volumeMounts:
-        - mountPath: /custom-tools
-          name: custom-tools
-  # -- Additional volumeMounts to the repo server main container
-  volumeMounts: []
+  - name: download-tools
+    image: alpine/curl
+    env:
+      - name: AVP_VERSION
+        value: 1.15.0
+    command: [sh, -c]
+    args:
+      - >-
+        curl -L https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v$(AVP_VERSION)/argocd-vault-plugin_$(AVP_VERSION)_linux_amd64 -o argocd-vault-plugin &&
+        chmod +x argocd-vault-plugin &&
+        mv argocd-vault-plugin /custom-tools/
+    volumeMounts:
+      - mountPath: /custom-tools
+        name: custom-tools
 
   # -- Additional volumes to the repo server pod
   volumes: 
-    - configMap:
-        name: cmp-plugin
+  - configMap:
       name: cmp-plugin
-    - name: custom-tools
-      emptyDir: {}
+    name: cmp-plugin
+  - name: custom-tools
+    emptyDir: {}

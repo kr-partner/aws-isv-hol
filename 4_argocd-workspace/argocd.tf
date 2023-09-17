@@ -5,7 +5,8 @@ resource "helm_release" "argocd" {
   version          = "5.45.3"
   chart            = "argo-cd"
   create_namespace = false
-  values = ["${path.module}/yaml-resources/ovrride-values.yaml"]
+  
+  values = [file("${path.module}/yaml-resources/override-values.yaml")]
 
   set {
     name  = "server.service.type"
