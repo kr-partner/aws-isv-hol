@@ -18,6 +18,6 @@ variable "user" {
   default = "secret_user"
 }
 
-variable "passowrd" {
+variable "password" {
   default = "secret_password"
 }

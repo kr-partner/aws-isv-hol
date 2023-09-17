@@ -50,7 +50,7 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
   depends_on = [helm_release.argocd]
 }
 
-resource "kubernetes_config_map" "cmp-plugin" {
+resource "kubernetes_manifest" "cmp-plugin" {
   manifest = yamldecode(file("${path.module}/yaml-resources/cmp-plguin.yaml"))
 }
 
