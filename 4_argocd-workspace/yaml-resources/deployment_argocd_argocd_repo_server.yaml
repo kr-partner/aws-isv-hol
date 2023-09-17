@@ -217,9 +217,6 @@ spec:
           value: /helm-working-dir
         - name: HELM_DATA_HOME
           value: /helm-working-dir
-        envFrom:
-        - secretRef:
-            name: argocd-vault-plugin-credentials
         image: quay.io/argoproj/argocd:v2.7.11
         imagePullPolicy: IfNotPresent
         livenessProbe:
