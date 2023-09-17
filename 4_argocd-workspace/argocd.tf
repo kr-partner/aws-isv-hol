@@ -51,7 +51,7 @@ resource "kubernetes_secret" "secret_argocd_argocd_vault_plugin_credentials" {
 }
 
 resource "kubernetes_manifest" "cmp-plugin" {
-  manifest = yamldecode(file("${path.module}/yaml-resources/cmp-plguin.yaml"))
+  manifest = yamldecode(file("${path.module}/yaml-resources/cmp-plugin.yaml"))
 }
 
 # resource "terraform_data" "cluster" {
