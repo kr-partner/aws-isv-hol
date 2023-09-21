@@ -10,8 +10,7 @@ resource "vault_kv_secret_v2" "kv-v2" {
   name  = "aws/s3"
   data_json = jsonencode(
     {
-      username = "object-url",
-      password = "https://songpubket.s3.ap-northeast-2.amazonaws.com/afc6a48cf93e78e27c2f0fd68ab59eb2.png"
+      object-url = "https://songpubket.s3.ap-northeast-2.amazonaws.com/afc6a48cf93e78e27c2f0fd68ab59eb2.png",
     }
   )
 }
