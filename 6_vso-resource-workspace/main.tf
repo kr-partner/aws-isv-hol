@@ -70,4 +70,5 @@ data "kubernetes_service" "static_webapp" {
     name      = "vso-static-demo-svc"
     namespace = "demo-ns"
   }
+  depends_on = [ kubernetes_manifest.vault-static-app, kubernetes_manifest.vault-static-svc ]
 }

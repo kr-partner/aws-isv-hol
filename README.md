@@ -44,8 +44,6 @@
 └── README.md
 ```
 
-
-
 ### 1) [eks-workspace](./1_eks-workspace/)이동 후 EKS 클러스터 배포
 Terraform CLI가 구성된 환경(로컬PC, VM 등)에서 `terraform` 명령을 수행하여 EKS 클러스터를 생성합니다.
 ```
@@ -78,6 +76,10 @@ EKS 클러스터에 실습을 위한 각종 환경을 구성합니다.
 
 > 📌 디렉토리 구조  
 > 본 과정부터는 2~6번 워크스페이스를 사용합니다.
+- `2_vault-infra-workspace` : 필수
+- `3_jenkins-infra-workspace` : 선택
+- `4_argocd-workspace` : 필수
+- `5_vso-infra-workspace` : `6_vso-resource-workspace` 실습을 위해 필수
 ```bash
 ├── 0_contents
 ├── 1_eks-workspace
