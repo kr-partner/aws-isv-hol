@@ -77,3 +77,11 @@ resource "kubernetes_manifest" "cmp-plugin" {
 #     EOT
 #   }
 # }
+
+data "kubernetes_secret" "argocd_admin" {
+  metadata {
+    namespace = "argocd"
+    name      = "argocd-initial-admin-secret"
+  }
+  depends_on = [helm_release.argocd]
+}
